@@ -22,6 +22,7 @@ import {
   combineRGB,
 } from '../color';
 
+import yaml from 'js-yaml';
 
 const ajv = registerKeywords(new Ajv({ allErrors: true }));
 const validators = {
@@ -40,7 +41,7 @@ const initialEmbed = {
   description: 'this supports [named links](https://discordapp.com) on top of the previously shown subset of markdown. ```\nyes, even code blocks```',
   url: 'https://discordapp.com',
   color: initialColor,
-  timestamp: new Date().toISOString(),
+  timestamp: Date.now(),
   footer: { icon_url: 'https://cdn.discordapp.com/embed/avatars/0.png', text: 'footer text' },
   thumbnail: { url: 'https://cdn.discordapp.com/embed/avatars/0.png' },
   image: { url: 'https://cdn.discordapp.com/embed/avatars/0.png' },
@@ -60,12 +61,12 @@ const initialEmbed = {
 
 // this is just for convenience.
 // TODO: vary this more?
-const initialCode = JSON.stringify({
+const initialCode = yaml.safeDump({
   content: initialContent,
   embed: initialEmbed
-}, null, '  ');
+}, {flowLevel: 3});
 
-const webhookExample = JSON.stringify({
+const webhookExample = yaml.safeDump({
   content: `${initialContent}\nWhen sending webhooks, you can have [masked links](https://discordapp.com) in here!`,
   embeds: [
     initialEmbed,
@@ -104,7 +105,7 @@ const App = React.createClass({
     let error = '';
 
     try {
-      parsed = JSON.parse(input);
+      parsed = yaml.safeLoad(input);
       isValid = validator(parsed);
       if (!isValid) {
         error = stringifyErrors(parsed, validator.errors);
@@ -185,7 +186,7 @@ const App = React.createClass({
   colorChange(color) {
     let val = combineRGB(color.rgb.r, color.rgb.g, color.rgb.b);
     if (val === 0) val = 1; // discord wont accept 0
-    const input = this.state.input.replace(/"color"\s*:\s*([0-9]+)/, '"color": ' + val);
+    const input = this.state.input.replace(/color\s*:\s*([0-9]+)/, 'color: ' + val);
     this.validateInput(input, this.state.webhookMode);
   },
 

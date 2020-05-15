@@ -91,9 +91,8 @@ const customMessages = {
 
     let result = `"${dataPath}" is not a valid timestamp.`;
 
-    const m = /^\d{4}-\d\d-\d\d(?:[T ]\d\d:\d\d:\d\d(?:\.\d+)?([+-]\d\d(?::\d\d)?)?)?$/.exec(dest);
-    if (m) {
-      result = `You can't specify UTC offsets in "${dataPath}", just Z or nothing (not even +00:00 is supported)`;
+    if (isNaN(dest)) {
+      result = 'Not a valid Epoch Timestamp.';
     }
 
     return result;

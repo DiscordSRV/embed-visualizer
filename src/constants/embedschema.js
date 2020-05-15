@@ -1,11 +1,6 @@
 // for colors, 24-bit integer expected to be in RR GG BB order
 const UINT24_MAX = Math.pow(2, 24) - 1;
 
-// iso 8601, but no support for utc offsets
-// or even +00:00 for that matter, either just Z or nothing
-const ISO_8601 = /^(\d{4})-(\d\d)-(\d\d)([T ](\d\d):(\d\d):(\d\d)(\.\d+)?(Z)?)?$/;
-
-
 // see https://discordapp.com/developers/docs/resources/channel#embed-object
 
 // we don't check urls here, even though generally only http(s) urls work
@@ -28,7 +23,7 @@ const embedSchema = {
     'title': { 'type': 'string', 'maxLength': 256, 'trim': true },
     'url': { 'type': 'string' },
     'description': { 'type': 'string', 'maxLength': 2048, 'trim': true },
-    'timestamp': { 'type': 'string', 'pattern': ISO_8601.source },
+    'timestamp': { 'type': 'integer', 'maximum': 2147483647000 },
     'color': { 'type': 'integer', 'maximum': UINT24_MAX },
     'footer': {
       'type': 'object',

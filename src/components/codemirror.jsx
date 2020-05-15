@@ -8,11 +8,11 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/edit/matchbrackets';
 import 'codemirror/addon/scroll/simplescrollbars';
-import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/yaml/yaml';
 
 
 const defaultOptions = {
-  mode: { name: 'javascript', json: true },
+  mode: { name: 'yaml'},
   autoCloseBrackets: true,
   matchBrackets: true,
   tabSize: 2,
