@@ -239,7 +239,7 @@ const App = React.createClass({
               <FooterButton label={colorPickerLabel} onClick={this.openColorPicker} />
               {colorPicker}
             </div>
-            <FooterButton label={webhookModeLabel} onClick={this.toggleWebhookMode} />
+            {/* <FooterButton label={webhookModeLabel} onClick={this.toggleWebhookMode} /> */}
             <FooterButton label={themeLabel} onClick={this.toggleTheme} />
             <FooterButton label={compactModeLabel} onClick={this.toggleCompactMode} />
             <FooterButton label='About' onClick={this.openAboutModal} />
