@@ -1,34 +1,10 @@
 import React from 'react';
 import hljs from 'highlight.js';
 import Modal from './modal';
-
-import discord4j from '../snippets/discord4j';
-import discordnet from '../snippets/discordnet';
-import dsharpplus from '../snippets/dsharpplus';
-import dsharpplusEmbedbuilder from '../snippets/dsharpplus-embedbuilder';
-import discordpy from '../snippets/discordpy';
-import discordie from '../snippets/discordie';
-import discordjs from '../snippets/discordjs';
-import discordio from '../snippets/discordio';
-import restcord from '../snippets/restcord';
-import eris from '../snippets/eris';
-import discordrb from '../snippets/discordrb';
-import jda from '../snippets/jda';
-
+import yml from '../snippets/yml';
 
 const libraries = {
-  'dotnet_discord-net': discordnet,
-  'dotnet_dsharpplus': dsharpplus,
-  'dotnet_dsharpplusEmbedbuilder': dsharpplusEmbedbuilder,
-  'python_discord-py': discordpy,
-  'js_discordie': discordie,
-  'js_discordjs': discordjs,
-  'js_discordio': discordio,
-  'js_eris': eris,
-  'php_restcord': restcord,
-  'ruby_discordrb': discordrb,
-  'java_discord4j': discord4j,
-  'java_jda': jda,
+  'yml': yml,
 };
 
 // TODO: check for localStorage availability?
