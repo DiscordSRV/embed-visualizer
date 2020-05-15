@@ -5,18 +5,16 @@ import logo from '../images/logo.png';
 
 
 // TODO: move this link out of here?
-const GITHUB_REPO = 'https://github.com/leovoel/embed-visualizer';
+const GITHUB_REPO = 'https://github.com/pkrok01/embed-visualizer';
 
 const aboutText = `
 -= Visualizer and validator for [Discord embeds][embed-docs]. =-
+-= Originally made by [leovoel](${GITHUB_REPO.replace('pkrok01', 'leovoel')}), modified by [granny](${GITHUB_REPO.replace('embed-visualizer', '')}). =-
 
 ----------------------------------------------------------------
 
 Its primary purpose is mostly just previewing how some given embed might appear on [Discord][discordapp],
 but it also serves as a reference for the various limits that are imposed on embeds.
-
-It also contains some primitive code generation, in case you're not sure how to
-use embeds in your library of choice. If your library isn't here you can open an issue/make a pull request about it.
 
 This tool is not officially part of [Discord][discordapp] or its [documentation][discord-docs].
 It makes use of some assets derived/extracted from their application. This is
@@ -24,43 +22,12 @@ done for the sake of more helpful visuals, and not to infringe on their copyrigh
 
 The source code is available on [GitHub](${GITHUB_REPO}), under the MIT license.
 
-### Webhook mode?
-
------------------
-
-The main difference is that instead of:
-
-\`\`\`json
-{
-  "embed": {
-    "name": "This is my really cool embed",
-    ...
-  }
-}
-\`\`\`
-
-...you should have:
-
-\`\`\`json
-{
-  "embeds": [
-    { "name": "This is my really cool embed #1", ... },
-    { "name": "This is my really cool embed #2", ... },
-    ...
-  ]
-}
-\`\`\`
-
-...and that you can also use masked links - i.e. \`[title](url)\` - on the message content.
-
 ### Caveats
 
 -----------
 
 - No GUI for creating embeds (yet?)
 
-  Currently the idea is you paste in some JSON and get a rendered version
-  of it back, and maybe do minor edits.
   In the future some sort of form input mode could be added in.
 
 - Invites are not rendered
@@ -78,11 +45,6 @@ The main difference is that instead of:
   think it's worth the effort (especially to reverse-engineer it out of the client).
 
   I don't also know if it's even necessary, hard to tell.
-
-- JSON data is not exactly the actual data you can send
-
-  It's not that it's wrong (it may be at some point in the future, but that's not a problem),
-  but rather that there are properties we don't validate/render. This is by design.
 
   When in doubt, consult the [docs][embed-docs].
 
