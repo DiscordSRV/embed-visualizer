@@ -5,11 +5,11 @@ import logo from '../images/logo.png';
 
 
 // TODO: move this link out of here?
-const GITHUB_REPO = 'https://github.com/pkrok01/embed-visualizer';
+const GITHUB_REPO = 'https://github.com/granny/embed-visualizer';
 
 const aboutText = `
 -= Visualizer and validator for [Discord embeds][embed-docs]. =-
--= Originally made by [leovoel](${GITHUB_REPO.replace('pkrok01', 'leovoel')}), modified by [granny](${GITHUB_REPO.replace('embed-visualizer', '')}). =-
+-= Originally made by [leovoel](${GITHUB_REPO.replace('granny', 'leovoel')}), modified by [granny](${GITHUB_REPO.replace('embed-visualizer', '')}). =-
 
 ----------------------------------------------------------------
 

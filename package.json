@@ -5,7 +5,7 @@
   "license": "MIT",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://pkrok.github.io/embed-visualizer/",
+  "homepage": "https://granny.github.io/embed-visualizer/",
   "devDependencies": {
     "react-scripts": "0.8.5",
     "rimraf": "^2.5.4"
