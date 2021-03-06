@@ -37,13 +37,14 @@ const CodeModal = React.createClass({
     let code = 'Errors encountered when validating/parsing your data.\nCheck those first before trying to generate code.';
     let language = 'accesslog';
 
-    if (webhookMode) {
-      // TODO: add support for this in whatever libraries support it directly?
-      // seems like very few of them do it
-      code = 'Webhook mode not supported yet.';
-    } else if (!hasError) {
+    // if (webhookMode) {
+    //   // TODO: add support for this in whatever libraries support it directly?
+    //   // seems like very few of them do it
+    //   code = 'Webhook mode not supported yet.';
+    // } else
+    if (!hasError) {
       language = libraries[this.state.library].language;
-      code = libraries[this.state.library].generateFrom(data);
+      code = libraries[this.state.library].generateFrom(data, webhookMode);
     }
 
     const theme = `atom-one-${this.props.darkTheme ? 'dark' : 'light'}`;

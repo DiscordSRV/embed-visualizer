@@ -121,4 +121,20 @@ const webhookMessageSchema = {
   'atLeastOneOf': ['content', 'embeds']
 };
 
-export { botMessageSchema, webhookMessageSchema };
+const customMessageSchema = {
+  'type': 'object',
+  'additionalProperties': false,
+  'properties': {
+    'username': { 'type': 'string', 'maxLength': 256 },
+    'avatar_url': { 'type': 'string' },
+    'content': {
+      'type': 'string',
+      'maxLength': 2000,
+      'trim': true
+    },
+    'embed': embedSchema
+  },
+  'atLeastOneOf': ['content', 'embed']
+}
+
+export { botMessageSchema, webhookMessageSchema, customMessageSchema };

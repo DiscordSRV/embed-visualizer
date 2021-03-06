@@ -1,4 +1,4 @@
-import { botMessageSchema, webhookMessageSchema } from './constants/embedschema';
+import { botMessageSchema, webhookMessageSchema, customMessageSchema } from './constants/embedschema';
 
 
 function traverseObject(object, path) {
@@ -186,6 +186,9 @@ function registerKeywords(ajv) {
     errors: true,
     compile: function(enabled) {
       function inner(data) {
+        if (data === "") { // empty is fine
+          return true;
+        }
         if (data && data.trim()) {
           return true;
         }
@@ -214,7 +217,7 @@ function registerKeywords(ajv) {
   return ajv;
 }
 
-function stringifyErrors(data, errors, options) {
+function stringifyErrors(mapping, data, errors, options) {
   // we expect the data to be passed as well since
   // that way we can report better errors.
 
@@ -243,7 +246,7 @@ function stringifyErrors(data, errors, options) {
       if (error.dataPath) {
         // dataPath starts with a dot, which we don't
         // want for properties on the top-level
-        text += `"${error.dataPath.slice(1)}" ${error.message}${opt.separator}`;
+        text += `"${mapping[error.dataPath.slice(1)]}" ${error.message}${opt.separator}`;
       } else {
         text += `${opt.root} ${error.message}${opt.separator}`;
       }
@@ -253,4 +256,4 @@ function stringifyErrors(data, errors, options) {
   return text.slice(0, -opt.separator.length);
 }
 
-export { botMessageSchema, webhookMessageSchema, registerKeywords, stringifyErrors };
+export { botMessageSchema, webhookMessageSchema, customMessageSchema, registerKeywords, stringifyErrors };

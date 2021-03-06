@@ -5,14 +5,15 @@ import Button from './button';
 import ModalContainer from './modalcontainer';
 import AboutModal from './aboutmodal';
 import CodeModal from './codemodal';
-import WarningModal from './warningmodal';
+//import WarningModal from './warningmodal';
 import CodeMirror from './codemirror';
 import DiscordView from './discordview';
 
 import Ajv from 'ajv';
 import {
-  botMessageSchema,
-  webhookMessageSchema,
+  customMessageSchema,
+//  botMessageSchema,
+//  webhookMessageSchema,
   registerKeywords,
   stringifyErrors,
 } from '../validation';
@@ -26,8 +27,9 @@ import yaml from 'js-yaml';
 
 const ajv = registerKeywords(new Ajv({ allErrors: true }));
 const validators = {
-  regular: ajv.compile(botMessageSchema),
-  webhook: ajv.compile(webhookMessageSchema),
+//  regular: ajv.compile(botMessageSchema),
+//  webhook: ajv.compile(webhookMessageSchema),
+  custom: ajv.compile(customMessageSchema)
 };
 
 function FooterButton(props) {
@@ -36,46 +38,53 @@ function FooterButton(props) {
 
 const initialContent = 'this `supports` __a__ **subset** *of* ~~markdown~~ 😃 ```js\nfunction foo(bar) {\n  console.log(bar);\n}\n\nfoo(1);```';
 const initialColor = Math.floor(Math.random() * 0xFFFFFF);
-const initialEmbed = {
-  title: 'title ~~(did you know you can have markdown here too?)~~',
-  description: 'this supports [named links](https://discordapp.com) on top of the previously shown subset of markdown. ```\nyes, even code blocks```',
-  url: 'https://discordapp.com',
-  color: initialColor,
-  timestamp: Date.now(),
-  footer: { icon_url: 'https://cdn.discordapp.com/embed/avatars/0.png', text: 'footer text' },
-  thumbnail: { url: 'https://cdn.discordapp.com/embed/avatars/0.png' },
-  image: { url: 'https://cdn.discordapp.com/embed/avatars/0.png' },
-  author: {
-    name: 'author name',
-    url: 'https://discordapp.com',
-    icon_url: 'https://cdn.discordapp.com/embed/avatars/0.png'
-  },
-  fields: [
-    { name: '🤔', value: 'some of these properties have certain limits...' },
-    { name: '😱', value: 'try exceeding some of them!' },
-    { name: '🙄', value: 'an informative error should show up, and this view will remain as-is until all issues are fixed' },
-    { name: '<:thonkang:219069250692841473>', value: 'these last two', inline: true },
-    { name: '<:thonkang:219069250692841473>', value: 'are inline fields', inline: true }
-  ]
-};
 
 // this is just for convenience.
 // TODO: vary this more?
-const initialCode = yaml.safeDump({
-  content: initialContent,
-  embed: initialEmbed
-}, {flowLevel: 3});
-
-const webhookExample = yaml.safeDump({
-  content: `${initialContent}\nWhen sending webhooks, you can have [masked links](https://discordapp.com) in here!`,
-  embeds: [
-    initialEmbed,
-    {
-      title: 'Woah',
-      description: 'You can also have multiple embeds!\n**NOTE**: The color picker does not work with multiple embeds (yet).'
+const initialCode = yaml.dump({
+  Option: {
+    Enabled: true,
+    Webhook: {
+      Enable: false,
+      AvatarUrl: "%botavatarurl%",
+      Name: "%botname%"
     },
-  ]
-}, null, '  ');
+    Content: initialContent,
+    Embed: {
+      Enabled: true,
+      Color: "#00ff00",
+      Author: {
+        ImageUrl: "%embedavatarurl%",
+        Name: "%username% joined the server",
+        Url: ""
+      },
+      ThumbnailUrl: "",
+      Title: {
+        Text: "",
+        Url: ""
+      },
+      Description: "",
+      Fields: [],
+      ImageUrl: "",
+      Footer: {
+        Text: "",
+        IconUrl: ""
+      },
+      Timestamp: false
+    }
+  }
+}, {flowLevel: 4, quotingType: "\""});
+
+// const webhookExample = yaml.safeDump({
+//   content: `${initialContent}\nWhen sending webhooks, you can have [masked links](https://discordapp.com) in here!`,
+//   embeds: [
+//     initialEmbed,
+//     {
+//       title: 'Woah',
+//       description: 'You can also have multiple embeds!\n**NOTE**: The color picker does not work with multiple embeds (yet).'
+//     },
+//   ]
+// }, null, '  ');
 
 const App = React.createClass({
   // TODO: serialize input, webhookMode, compactMode and darkTheme to query string?
@@ -93,29 +102,122 @@ const App = React.createClass({
       embedColor: extractRGB(initialColor),
 
       // TODO: put in local storage?
-      webhookExampleWasShown: false,
+//      webhookExampleWasShown: false,
     };
   },
 
+  recursivelyMap(mappings, input, output) {
+    for (let key in mappings) {
+      let mapping = mappings[key];
+      let value = input[key];
+
+      if (typeof mapping === "string") {
+        if (key === "Timestamp" && typeof value === "boolean") {
+          if (!value) {
+            // skip false
+            continue;
+          }
+          value = Date.now(); // current time
+        }
+        if (key === "Color" && typeof value === "string") {
+          // hex to int
+          let rrggbb = value.substring(1);
+          const bbggrr = rrggbb.substr(4, 2) + rrggbb.substr(2, 2) + rrggbb.substr(0, 2);
+          value = parseInt(bbggrr, 16);
+        }
+
+        if (mapping.indexOf(".") !== -1) {
+          let parts = mapping.split("\.");
+          let last = output;
+          for (let i = 0; i < parts.length - 1; i++) {
+            let current = last[parts[i]];
+            if (current === undefined) {
+              last[parts[i]] = {};
+              last = last[parts[i]];
+            } else {
+              last = current;
+            }
+          }
+          last[parts[parts.length - 1]] = value;
+        } else {
+          output[mapping] = value;
+        }
+      } else {
+        this.recursivelyMap(mapping, value, output);
+      }
+    }
+  },
+
+  reverseMap(map, output, prefix) {
+    for (let key in map) {
+      let value = map[key];
+      if (typeof value === "string") {
+        output[value] = prefix + key;
+      } else {
+        this.reverseMap(map[key], output, prefix + key + ".");
+      }
+    }
+
+    return output;
+  },
+
   validateInput(input, webhookMode) {
-    const validator = webhookMode ? validators.webhook : validators.regular;
+    const validator = validators.custom;
 
     let parsed;
     let isValid = false;
     let error = '';
 
+    let mapped = {};
     try {
-      parsed = yaml.safeLoad(input);
-      isValid = validator(parsed);
+      parsed = yaml.load(input);
+      webhookMode = typeof parsed.Option.Webhook.Enable === "boolean" ? parsed.Option.Webhook.Enable : webhookMode;
+
+      let yamlToJsonMap = {
+        Option: {
+          Webhook: {
+            AvatarUrl: "avatar_url",
+            Name: "username"
+          },
+          Content: "content",
+          Embed: {
+            Color: "embed.color",
+            Author: {
+              ImageUrl: "embed.author.icon_url",
+              Name: "embed.author.name",
+              Url: "embed.author.url"
+            },
+            ThumbnailUrl: "embed.thumbnail.url",
+            Title: {
+              Text: "embed.title",
+              Url: "embed.url"
+            },
+            Description: "embed.description",
+            Fields: "embed.fields",
+            ImageUrl: "embed.image.url",
+            Footer: {
+              Text: "embed.footer.text",
+              IconUrl: "embed.footer.icon_url"
+            },
+            Timestamp: "embed.timestamp"
+          }
+        }
+      }
+      this.recursivelyMap(yamlToJsonMap, parsed, mapped);
+
+      let jsonToYamlMap = this.reverseMap(yamlToJsonMap, {}, "");
+
+      isValid = validator(mapped);
       if (!isValid) {
-        error = stringifyErrors(parsed, validator.errors);
+        error = stringifyErrors(jsonToYamlMap, mapped, validator.errors);
       }
     } catch (e) {
       error = e.message;
     }
 
-    let data = isValid ? parsed : this.state.data;
+    let data = isValid ? mapped : this.state.data;
 
+    console.log("Webhook mode: " + webhookMode)
     let embedColor = { r: 0, g: 0, b: 0 };
     if (webhookMode && isValid && data.embeds && data.embeds[0]) {
       embedColor = extractRGB(data.embeds[0].color);
@@ -153,23 +255,23 @@ const App = React.createClass({
     this.setState({ currentModal: null });
   },
 
-  toggleWebhookMode() {
-    if (!this.state.webhookExampleWasShown) {
-      this.setState({ currentModal: WarningModal });
-    } else {
-      this.validateInput(this.state.input, !this.state.webhookMode);
-    }
-  },
-
-  displayWebhookExample() {
-    this.setState({ currentModal: null, webhookExampleWasShown: true });
-    this.validateInput(webhookExample, true);
-  },
-
-  dismissWebhookExample() {
-    this.setState({ currentModal: null, webhookExampleWasShown: true });
-    this.validateInput(this.state.input, true);
-  },
+  // toggleWebhookMode() {
+  //   if (!this.state.webhookExampleWasShown) {
+  //     this.setState({ currentModal: WarningModal });
+  //   } else {
+  //     this.validateInput(this.state.input, !this.state.webhookMode);
+  //   }
+  // },
+  //
+  // displayWebhookExample() {
+  //   this.setState({ currentModal: null, webhookExampleWasShown: true });
+  //   this.validateInput(webhookExample, true);
+  // },
+  //
+  // dismissWebhookExample() {
+  //   this.setState({ currentModal: null, webhookExampleWasShown: true });
+  //   this.validateInput(this.state.input, true);
+  // },
 
   toggleTheme() {
     this.setState({ darkTheme: !this.state.darkTheme });
@@ -191,7 +293,7 @@ const App = React.createClass({
   },
 
   render() {
-    const webhookModeLabel = `${this.state.webhookMode ? 'Dis' : 'En'}able webhook mode`;
+//    const webhookModeLabel = `${this.state.webhookMode ? 'Dis' : 'En'}able webhook mode`;
     const themeLabel = `${this.state.darkTheme ? 'Light' : 'Dark'} theme`;
     const compactModeLabel = `${this.state.compactMode ? 'Cozy' : 'Compact'} mode`;
     const colorPickerLabel = `${!this.state.colorPickerShowing ? 'Open' : 'Close'} color picker`;
@@ -229,6 +331,8 @@ const App = React.createClass({
                 webhookMode={this.state.webhookMode}
                 darkTheme={this.state.darkTheme}
                 compactMode={this.state.compactMode}
+                username={this.state.webhookMode ? this.state.data.username : undefined}
+                avatar_url={this.state.webhookMode ? this.state.data.avatar_url : undefined}
               />
             </div>
           </section>
