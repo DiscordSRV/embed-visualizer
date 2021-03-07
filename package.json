@@ -7,7 +7,7 @@
   "license": "MIT",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://granny.github.io/embed-visualizer/",
+  "homepage": "https://discordsrv.github.io/embed-visualizer/",
   "devDependencies": {
     "react-scripts": "^4.0.3",
     "rimraf": "^2.5.4"
