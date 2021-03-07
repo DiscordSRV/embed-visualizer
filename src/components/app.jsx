@@ -108,6 +108,9 @@ const App = React.createClass({
 
   recursivelyMap(mappings, input, output) {
     for (let key in mappings) {
+      if (!mappings.hasOwnProperty(key)) {
+        continue;
+      }
       let mapping = mappings[key];
       let value = input[key];
 
@@ -124,6 +127,27 @@ const App = React.createClass({
           let rrggbb = value.substring(1);
           const bbggrr = rrggbb.substr(4, 2) + rrggbb.substr(2, 2) + rrggbb.substr(0, 2);
           value = parseInt(bbggrr, 16);
+        }
+        if (key === "Fields") {
+          let newFields = [];
+          for (let field in value) {
+            if (!value.hasOwnProperty(field)) {
+              continue;
+            }
+
+            if (field.equals("blank")) {
+              // not supported :shrug:
+            }
+
+            let parts = field.split(";");
+            if (parts.length < 2) {
+              continue; // dum
+            }
+
+            let inline = parts.length < 3 || parts[2].equals("true");
+            newFields.push({name: parts[0], value: parts[1], inline: inline});
+          }
+          value = newFields;
         }
 
         if (mapping.indexOf(".") !== -1) {
@@ -150,6 +174,10 @@ const App = React.createClass({
 
   reverseMap(map, output, prefix) {
     for (let key in map) {
+      if (!map.hasOwnProperty(key)) {
+        continue;
+      }
+
       let value = map[key];
       if (typeof value === "string") {
         output[value] = prefix + key;
