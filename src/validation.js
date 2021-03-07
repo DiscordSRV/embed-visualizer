@@ -102,6 +102,7 @@ const customMessages = {
 function registerKeywords(ajv) {
 
   const disallowed = {
+      keyword: "disallowed",
       type: 'object',
       errors: true,
       compile: function(disallowedProperties) {
@@ -149,11 +150,12 @@ function registerKeywords(ajv) {
         });
       }
 
-      return ajv._opts.allErrors ? disallowAny : disallowOne;
+      return ajv.opts.allErrors ? disallowAny : disallowOne;
     }
   };
 
   const atLeastOneOf = {
+    keyword: "atLeastOneOf",
     type: 'object',
     errors: true,
     compile: function(expectedProperties) {
@@ -182,6 +184,7 @@ function registerKeywords(ajv) {
   };
 
   const trim = {
+    keyword: "trim",
     type: 'string',
     errors: true,
     compile: function(enabled) {
@@ -211,9 +214,9 @@ function registerKeywords(ajv) {
     }
   };
 
-  ajv.addKeyword('disallowed', disallowed);
-  ajv.addKeyword('atLeastOneOf', atLeastOneOf);
-  ajv.addKeyword('trim', trim);
+  ajv.addKeyword(disallowed);
+  ajv.addKeyword(atLeastOneOf);
+  ajv.addKeyword(trim);
   return ajv;
 }
 
