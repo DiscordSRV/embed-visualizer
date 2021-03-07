@@ -4,8 +4,6 @@ object-assign
 @license MIT
 */
 
-/*! https://mths.be/punycode v1.4.1 by @mathias */
-
 /*! js-yaml 4.0.0 https://github.com/nodeca/js-yaml @license MIT */
 
 /**
@@ -40,5 +38,7 @@ object-assign
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
+/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
 
 //! moment.js
