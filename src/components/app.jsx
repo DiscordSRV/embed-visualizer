@@ -23,6 +23,8 @@ import {
   combineRGB,
 } from '../color';
 
+import steveAvatar from '../images/steve.png';
+
 import yaml from 'js-yaml';
 
 const ajv = registerKeywords(new Ajv({ allErrors: true }));
@@ -121,12 +123,26 @@ const App = React.createClass({
           }
           value = Date.now(); // current time
         }
-        if (key === "Color" && typeof value === "string") {
-          // hex to int
-          let rrggbb = value.substring(1);
-          const bbggrr = rrggbb.substr(4, 2) + rrggbb.substr(2, 2) + rrggbb.substr(0, 2);
-          value = parseInt(bbggrr, 16);
+
+        if (typeof value === "string") {
+          if (key === "Color") {
+            // hex to int
+            let rrggbb = value.substring(1);
+            const bbggrr = rrggbb.substr(4, 2) + rrggbb.substr(2, 2) + rrggbb.substr(0, 2);
+            value = parseInt(bbggrr, 16);
+          } else {
+            value = value.replace(/%time%|%date%/g, Date.now())
+              .replace("%username%", "steve")
+              .replace("%displayname%", "Steve")
+              .replace("%world%", "World")
+              .replace("%deathmessage%", "was killed by a skeleton")
+              .replace("%embedavatarurl%", steveAvatar)
+              .replace("%botavatarurl%", "https://cdn.discordapp.com/embed/avatars/0.png")
+              .replace("%botname%", "Discord Bot")
+              .replace(/%.+?%/g, "");
+          }
         }
+
         if (key === "Fields") {
           let newFields = [];
           for (let field in value) {
