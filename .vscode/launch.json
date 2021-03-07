@@ -8,7 +8,7 @@
 			"command": "npm run start",
 			"name": "Run React start",
 			"request": "launch",
-			"type": "pwa-node-terminal"
+			"type": "node-terminal"
 		}
 	]
 }

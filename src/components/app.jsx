@@ -108,9 +108,8 @@ const App = React.createClass({
 
   recursivelyMap(mappings, input, output) {
     for (let key in mappings) {
-      if (!mappings.hasOwnProperty(key)) {
-        continue;
-      }
+      if (!Object.prototype.hasOwnProperty.call(mappings, key)) continue;
+
       let mapping = mappings[key];
       let value = input[key];
 
@@ -131,9 +130,7 @@ const App = React.createClass({
         if (key === "Fields") {
           let newFields = [];
           for (let field in value) {
-            if (!value.hasOwnProperty(field)) {
-              continue;
-            }
+            if (!Object.prototype.hasOwnProperty.call(mappings, key)) continue;
 
             if (field.equals("blank")) {
               // not supported :shrug:
@@ -151,7 +148,7 @@ const App = React.createClass({
         }
 
         if (mapping.indexOf(".") !== -1) {
-          let parts = mapping.split("\.");
+          let parts = mapping.split(".");
           let last = output;
           for (let i = 0; i < parts.length - 1; i++) {
             let current = last[parts[i]];
@@ -174,9 +171,7 @@ const App = React.createClass({
 
   reverseMap(map, output, prefix) {
     for (let key in map) {
-      if (!map.hasOwnProperty(key)) {
-        continue;
-      }
+      if (!Object.prototype.hasOwnProperty.call(map, key)) continue;
 
       let value = map[key];
       if (typeof value === "string") {
@@ -245,7 +240,6 @@ const App = React.createClass({
 
     let data = isValid ? mapped : this.state.data;
 
-    console.log("Webhook mode: " + webhookMode)
     let embedColor = { r: 0, g: 0, b: 0 };
     if (webhookMode && isValid && data.embeds && data.embeds[0]) {
       embedColor = extractRGB(data.embeds[0].color);
