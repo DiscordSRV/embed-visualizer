@@ -9,7 +9,7 @@
   "private": true,
   "homepage": "https://granny.github.io/embed-visualizer/",
   "devDependencies": {
-    "react-scripts": "0.8.5",
+    "react-scripts": "^4.0.3",
     "rimraf": "^2.5.4"
   },
   "dependencies": {
