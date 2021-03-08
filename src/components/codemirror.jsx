@@ -30,26 +30,24 @@ const defaultOptions = {
   viewportMargin: Infinity,
 };
 
-const CodeMirror = React.createClass({
-  getDefaultProps() {
-    return {
-      theme: 'default',
-      preserveScrollPosition: false,
-    };
-  },
+class CodeMirror extends React.Component {
+  static defaultProps = {
+    theme: 'default',
+    preserveScrollPosition: false,
+  };
 
   componentDidMount() {
     this.instance = CM.fromTextArea(this.textarea, defaultOptions);
     this.updateTheme(this.props.theme);
     this.instance.on('change', this.valueChanged);
     this.focus();
-  },
+  }
 
   componentWillUnmount() {
     if (this.instance) {
       this.instance.toTextArea();
     }
-  },
+  }
 
   componentWillReceiveProps(next) {
     if (
@@ -69,17 +67,17 @@ const CodeMirror = React.createClass({
     if (next.theme) {
       this.updateTheme(next.theme);
     }
-  },
+  }
 
-  updateTheme(name) {
+  updateTheme = (name) => {
     this.instance.setOption('theme', name);
-  },
+  };
 
-  valueChanged(instance, change) {
+  valueChanged = (instance, change) => {
     if (this.props.onChange && change.origin !== 'setValue') {
       this.props.onChange(this.instance.getValue(), change);
     }
-  },
+  };
 
   render() {
     return (
@@ -91,15 +89,14 @@ const CodeMirror = React.createClass({
         />
       </div>
     );
-  },
+  }
 
-  focus() {
+  focus = () => {
     if (this.instance) {
       this.instance.focus();
     }
-  },
-
-});
+  };
+}
 
 
 export default CodeMirror;

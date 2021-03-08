@@ -87,11 +87,11 @@
 .modal-enter-active { animation: fade-in 190ms ease-out; }
 .modal-enter-active .inner { animation: zoom-in 190ms ease-in-out; }
 
-.modal-leave { opacity: 1; }
-.modal-leave .inner { transform: scale(1); }
+.modal-exit { opacity: 1; }
+.modal-exit .inner { transform: scale(1); }
 
-.modal-leave-active { animation: fade-out 190ms ease-in; }
-.modal-leave-active .inner { animation: zoom-out 190ms ease-in; }
+.modal-exit-active { animation: fade-out 190ms ease-in; }
+.modal-exit-active .inner { animation: zoom-out 190ms ease-in; }
 
 @keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }

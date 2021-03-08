@@ -1,21 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 
-const Modal = React.createClass({
-  propTypes: {
-    maxWidth: React.PropTypes.string,
-    maxHeight: React.PropTypes.string,
-    title: React.PropTypes.string,
-    close: React.PropTypes.func,
-    children: React.PropTypes.node
-  },
+class Modal extends React.Component {
+  static propTypes = {
+    maxWidth: PropTypes.string,
+    maxHeight: PropTypes.string,
+    title: PropTypes.string,
+    close: PropTypes.func,
+    children: PropTypes.node
+  };
 
-  getDefaultProps() {
-    return { maxWidth: '60vw', maxHeight: '90vh' };
-  },
-
-  componentDidMount()    { document.body.style.overflow = 'hidden'; },
-  componentWillUnmount() { document.body.style.overflow = 'auto';   },
+  static defaultProps = { maxWidth: '60vw', maxHeight: '90vh' };
+  componentDidMount() { document.body.style.overflow = 'hidden'; }
+  componentWillUnmount() { document.body.style.overflow = 'auto';   }
 
   render() {
     const cls = 'z-1 inner shadow-3 br2 overflow-hidden flex flex-column open-sans';
@@ -36,8 +34,8 @@ const Modal = React.createClass({
         </div>
       </div>
     );
-  },
-});
+  }
+}
 
 
 export default Modal;

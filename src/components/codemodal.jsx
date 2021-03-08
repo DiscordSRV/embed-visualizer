@@ -12,8 +12,9 @@ const libraries = {
 
 const LOCAL_STORAGE_KEY = 'codegen_lib';
 
-const CodeModal = React.createClass({
-  getInitialState() {
+class CodeModal extends React.Component {
+  constructor(props) {
+    super(props);
     const keys = Object.keys(libraries);
     let initial = keys[Math.floor(Math.random() * keys.length)];
 
@@ -24,13 +25,13 @@ const CodeModal = React.createClass({
       localStorage.setItem(LOCAL_STORAGE_KEY, initial);
     }
 
-    return { library: initial };
-  },
+    this.state = { library: initial };
+  }
 
-  changeLibrary(event) {
+  changeLibrary = (event) => {
     localStorage.setItem('codegen_lang', event.target.value);
     this.setState({ library: event.target.value });
-  },
+  };
 
   render() {
     const { data, hasError, webhookMode, ...props } = this.props;
@@ -76,8 +77,8 @@ const CodeModal = React.createClass({
         </div>
       </Modal>
     );
-  },
-});
+  }
+}
 
 function wrapper(props) {
   return <CodeModal {...props} />;

@@ -4,22 +4,20 @@ import Embed from './embed';
 import { parse, parseAllowLinks, jumboify } from './markdown';
 
 
-const MessageTimestamp = React.createClass({
-  getDefaultProps() {
-    return { compactMode: false };
-  },
+class MessageTimestamp extends React.Component {
+  static defaultProps = { compactMode: false };
 
   componentDidMount() {
     this.timer = setInterval(() => this.tick(), 1000 * 60);
-  },
+  }
 
   componentWillUnmount() {
     clearInterval(this.timer);
-  },
+  }
 
-  tick() {
+  tick = () => {
     this.forceUpdate();
-  },
+  };
 
   render() {
     const { compactMode } = this.props;
@@ -27,8 +25,8 @@ const MessageTimestamp = React.createClass({
     const computed = compactMode ? m.format('LT') : m.calendar();
 
     return <span className='timestamp'>{computed}</span>;
-  },
-});
+  }
+}
 
 const MessageBody = ({ compactMode, username, content, webhookMode }) => {
   if (compactMode) {
@@ -110,18 +108,16 @@ const DiscordViewWrapper = ({ darkTheme, children }) => {
   );
 };
 
-const DiscordView = React.createClass({
-  getDefaultProps() {
-    return {
-      // TODO: make these two configurable?
-      username: 'Discord Bot',
-      avatar_url: 'https://cdn.discordapp.com/embed/avatars/0.png',
+class DiscordView extends React.Component {
+  static defaultProps = {
+    // TODO: make these two configurable?
+    username: 'Discord Bot',
+    avatar_url: 'https://cdn.discordapp.com/embed/avatars/0.png',
 
-      // hehe
-      darkTheme: true,
-      compactMode: false
-    };
-  },
+    // hehe
+    darkTheme: true,
+    compactMode: false
+  };
 
   render() {
     const {
@@ -158,8 +154,8 @@ const DiscordView = React.createClass({
         </DiscordViewWrapper>
       </div>
     );
-  },
-});
+  }
+}
 
 
 export default DiscordView;
